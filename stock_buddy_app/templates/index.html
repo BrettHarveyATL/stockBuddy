@@ -1,12 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Login & Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet"> 
 </head>
 <body>
-    Hello World
+    <div id="wrapper" class="align-items-center min-vh-100 d-flex justify-content-around">
+        <header>
+            <div class="form-group">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li class="list-group-item list-group-item-warning">
+                        {{ message }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </header>
+        <form action="/register/user" method="post">
+            {% csrf_token %}
+            <div class="form-group" >
+                <h2>Register</h2>
+                <label for="first_name">First Name <input type="text" name="first_name" class="form-control" /></label>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name" class="form-control" />
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input type="text" name="email" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password"></label>Password<input type="password" name="password" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="confirm_password"></label>Confirm PW<input type="password" name="confirm_password" class="form-control" />
+            </div>
+            <input type="submit" class="float-right btn btn-outline-primary" value="Register">
+        </form>
+        <form action="/login" method="post" id="loginForm">
+            {% csrf_token %}
+            <div>
+                <h2>Login</h2>
+                <label for="email">Email</label>
+                <input type="text" name="email" class="form-control">
+                <input type="hidden" name="user_id" value='{{user.id}}'>
+            </div>
+            <div class="form-group">
+                <label for="password"></label>Password<input type="password" name="password" class="form-control" />
+            </div>
+            <input type="submit" class="float-right btn btn-outline-primary" value="Login">
+        </form>
+    </div> <!--End of Wrapper-->
 </body>
 </html>
