@@ -3,8 +3,15 @@ import bcrypt
 from django.contrib import messages
 from .models import *
 
+
 def index(request):
+    if 'user_id' in request.session:
+        context = {
+            'logged_user': User.objects.get(id=request.session['user_id']),
+        }
+        return render(request, "userpage.html", context)
     return render(request, "index.html")
+
 
 def registerUser(request):
     errors = User.objects.basic_validator(request.POST)
@@ -13,25 +20,41 @@ def registerUser(request):
             messages.error(request, value)
         return redirect('/')
     password = request.POST['password']
-    pw_hash= bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    this_user = User.objects.create(first_name= request.POST['first_name'], last_name= request.POST['last_name'], email= request.POST['email'], password=pw_hash)
+    pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    this_user = User.objects.create(
+        first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'], password=pw_hash)
     request.session['user_id'] = this_user.id
-    return redirect('/main')
+    return redirect('/')
+
 
 def login(request):
-    user= User.objects.filter(email = request.POST['email'])
+    user = User.objects.filter(email=request.POST['email'])
     if user:
         logged_user = user[0]
         if bcrypt.checkpw(request.POST['password'].encode(), logged_user.password.encode()):
             request.session['user_id'] = logged_user.id
-            return redirect('/main')
-    messages.error(request,"Invalid login")
+            return redirect('/')
+    messages.error(request, "Invalid login")
     return redirect("/")
 
-def main(request):
-    if "user_id" not in request.session:
-        return redirect("/")
-    context = {
-        "user" : User.objects.get(id=request.session['user_id'])
-    }
-    return render(request, "main.html",context)
+
+def logout(request):
+    del request.session['user_id']
+    return redirect('/')
+
+def buy_stock(request):
+    # Add code to handle the transaction of buying a stock
+    pass
+
+def sell_stock(request):
+    # Add code to handle the transaction of selling a stock
+    pass
+
+def addMoney(request, id):
+    #Add code to handle adding to account  
+    pass
+
+
+# Take the selling price and subtract the initial purchase price. The result is the gain or loss.
+# Take the gain or loss from the investment and divide it by the original amount or purchase price of the investment.
+# Finally, multiply the result by 100 to arrive at the percentage change in the investment.
