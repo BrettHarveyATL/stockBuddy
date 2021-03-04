@@ -1,10 +1,8 @@
-console.log('js file loaded')
+var yahooFinance = import('./yahoo.js')
 
-function makeCall(tickerName){
-    fetch(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-financials?symbol=${tickerName}&region=US`)
-    .then(res => res.json())
-    .then(res => {
-        console.log(res);
-        document.getElementById('tickerPrice').innerHTML = res['price']['regularMarketPrice']['fmt']
-    })
-}
+print(yahooFinance.historical({
+    symbol: 'AAPL',
+    from: '2012-01-01',
+    to: '2012-12-31',
+    // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
+}))

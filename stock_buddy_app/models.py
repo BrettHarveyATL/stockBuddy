@@ -29,18 +29,16 @@ class User(models.Model):
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=200)
     password= models.CharField(max_length=150)
-    #account_owner
+    balance = models.IntegerField()
+    #positions
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = UserManger()
 
-class Account(models.Model):
-    balance = models.IntegerField()
-    owner = models.ForeignKey(User, related_name="account_owner", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
 class Position(models.Model):
     stock = models.CharField(max_length=50)
-    bought_at = models.IntegerField()
-    account = models.ForeignKey(Account, related_name="positions", on_delete=models.CASCADE)
+    num_shares = models.IntegerField()
+    bought_at = models.FloatField()
+    account = models.ForeignKey(User, related_name="positions", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
