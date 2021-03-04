@@ -7,15 +7,13 @@ import yfinance as yf
 
 def index(request):
     if 'user_id' in request.session:
+        this_user = request.session['user_id']
+        user_positions = Position.objects.filter(owned_by=User.objects.get(id=this_user))
+        
         context = {
             'logged_user': User.objects.get(id=request.session['user_id']),
+            'positions': user_positions,
         }
-
-        msft = yf.Ticker('MSFT')
-        msftinfo = msft.info
-
-        print(msftinfo['ask'])
-
         return render(request, "userpage.html", context)
     return render(request, "index.html")
 
@@ -64,10 +62,11 @@ def addMoney(request, id):
 def search (request):
     pass
     if 'user_id' in request.session:
-        current_search = yf.Ticker(session.POST('search'))
+        current_search = yf.Ticker(request.POST['search'])
         current_info = current_search.info
         print(current_info['ask'])
         return redirect("/userpage.html")
+
 
 # Take the selling price and subtract the initial purchase price. The result is the gain or loss.
 # Take the gain or loss from the investment and divide it by the original amount or purchase price of the investment.
