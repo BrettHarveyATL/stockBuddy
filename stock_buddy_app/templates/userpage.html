@@ -1,7 +1,8 @@
 {% extends "dashboard.html" %}
 
 {% block content %}
-<div class="row"> <!-- This is the blue portion of the wireframe  -->
+<div class="row">
+    <!-- This is the blue portion of the wireframe  -->
     <div class="col-6">
         <h3>Balance: {{user.account_owner.balance}}</h3>
         <form method="POST" action="/addmoney/{{user.id}}" id="addMoneyForum">
@@ -13,23 +14,26 @@
     </div>
     <div class="col-6">
         <h3>Search For a Stock!</h3>
-        <form method="POST" action="">
+        <form method="post" action="/search">
             {% csrf_token %}
             <input class="form-control" type="text" name="search" id="search">
             <button class="btn btn-outline-primary mt-3" type="submit">Search</button>
         </form>
     </div>
 </div>
-<div> <!-- This is for the green portion of the wireframe -->
-    <table>
+<div>
+    <!-- This is for the green portion of the wireframe -->
+    <table class="table table-striped">
         <thead>
-            <td>Ticker</td>
-            <td>Buy Price</td>
-            <td>Current Price</td>
-            <td>Owned # of Shares</td>
-            <td>% P/L</td>
-            <td>Buy</td>
-            <td>Sell</td>
+            <tr>
+                <th>Ticker</th>
+                <th>Buy Price</th>
+                <th>Current Price</th>
+                <th>Owned # of Shares</th>
+                <th>% P/L</th>
+                <th>Buy</th>
+                <th>Sell</th>
+            </tr>
         </thead>
         <tbody>
             {% for pos in positions%}
