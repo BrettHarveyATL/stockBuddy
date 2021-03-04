@@ -26,8 +26,7 @@ def registerUser(request):
         return redirect('/')
     password = request.POST['password']
     pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    this_user = User.objects.create(
-        first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'], password=pw_hash)
+    this_user = User.objects.create(first_name=request.POST['first_name'], last_name=request.POST['last_name'], balance=0, email=request.POST['email'], password=pw_hash)
     request.session['user_id'] = this_user.id
     return redirect('/')
 
