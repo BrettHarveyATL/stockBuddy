@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 import bcrypt
 from django.contrib import messages
 from .models import *
+import yfinance as yf
 
 
 def index(request):
@@ -9,6 +10,9 @@ def index(request):
         context = {
             'logged_user': User.objects.get(id=request.session['user_id']),
         }
+        msft = yf.Ticker("MSFT")
+        print(msft.financials)
+
         return render(request, "userpage.html", context)
     return render(request, "index.html")
 
