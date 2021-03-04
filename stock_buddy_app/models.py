@@ -39,3 +39,8 @@ class Account(models.Model):
     owner = models.ForeignKey(User, related_name="account_owner", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Position(models.Model):
+    stock = models.CharField(max_length=50)
+    bought_at = models.IntegerField()
+    account = models.ForeignKey(Account, related_name="positions", on_delete=models.CASCADE)

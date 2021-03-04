@@ -1,0 +1,45 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<div class="row"> <!-- This is the blue portion of the wireframe  -->
+    <div class="col-6">
+        <h3>Balance: {{user.account_owner.balance}}</h3>
+        <form method="POST" action="/addmoney/{{user.id}}" id="addMoneyForum">
+            {% csrf_token %}
+            <!-- <input type="hidden" value="user_id"> -->
+            <input class="form-control" type="text" name="amount" id="amount" placeholder="Enter Amount">
+            <button class="btn btn-outline-primary mt-3" type="submit" form="addMoneyForum">Add Money</button>
+        </form>
+    </div>
+    <div class="col-6">
+        <h3>Search For a Stock!</h3>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <input class="form-control" type="text" name="search" id="search">
+            <button class="btn btn-outline-primary mt-3" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+<div> <!-- This is for the green portion of the wireframe -->
+    <table>
+        <thead>
+            <td>Ticker</td>
+            <td>Buy Price</td>
+            <td>Current Price</td>
+            <td>Owned # of Shares</td>
+            <td>% P/L</td>
+            <td>Buy</td>
+            <td>Sell</td>
+        </thead>
+        <tbody>
+            {% for pos in positions%}
+            <tr>
+                <td>{{pos.stock}}</td>
+                <td>{{pos.bought_at}}</td>
+                <td id="tickerPrice"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
