@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 import bcrypt
 from django.contrib import messages
 from .models import *
+import yfinance as yf
 
 
 def index(request):
@@ -9,6 +10,12 @@ def index(request):
         context = {
             'logged_user': User.objects.get(id=request.session['user_id']),
         }
+
+        msft = yf.Ticker('MSFT')
+        msftinfo = msft.info
+
+        print(msftinfo['ask'])
+
         return render(request, "userpage.html", context)
     return render(request, "index.html")
 
@@ -54,6 +61,13 @@ def addMoney(request, id):
     #Add code to handle adding to account  
     pass
 
+def search (request):
+    pass
+    if 'user_id' in request.session:
+        current_search = yf.Ticker(session.POST('search'))
+        current_info = current_search.info
+        print(current_info['ask'])
+        return redirect("/userpage.html")
 
 # Take the selling price and subtract the initial purchase price. The result is the gain or loss.
 # Take the gain or loss from the investment and divide it by the original amount or purchase price of the investment.
