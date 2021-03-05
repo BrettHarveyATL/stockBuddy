@@ -9,7 +9,8 @@ def index(request):
     if 'user_id' in request.session:
         this_user = User.objects.get(id=request.session['user_id'])
         user_positions = Position.objects.filter(owned_by=this_user)
-        
+        for position in user_positions:
+            user_positions[position]['newattribute'] = yfinance stuff here
         context = {
             'logged_user': this_user,
             'positions': user_positions,
@@ -47,20 +48,31 @@ def logout(request):
     return redirect('/')
 
 def buy_stock(request):
-    # Add code to handle the transaction of buying a stock
-    pass
+    if 'user_id' in request.session:
+        this_user = User.objects.get(id=request.session['user_id'])
+        this_stock = yf.Ticker(request.POST['stock']).info
 
+        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=request.POST['num_shares'], owned_by=User.objects.get(id=this_user.id), market_price=0, bid_price=0, ask_price=0)
+        this_user.balance -= float(request.POST['num_shares'])*float(this_stock['ask'])
+        this_user.save()
+        return redirect('/')
 def sell_stock(request):
     # Add code to handle the transaction of selling a stock
-    pass
+    if 'user_id' in request.session:
+        this_user = User.objects.get(id=request.session['user_id'])
+        this_stock = yf.Ticker(request.POST['stock']).info
 
+        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=request.POST['num_shares'], owned_by=User.objects.get(id=this_user.id), market_price=0, bid_price=0, ask_price=0)
+        this_user.balance += float(request.POST['num_shares'])*float(this_stock['ask'])
+        this_user.save()
+        return redirect('/')
+        
 def addMoney(request, id):
     if 'user_id' in request.session:
         this_user = User.objects.get(id=id)
         this_user.balance += float(request.POST['amount'])
         this_user.save()
         return redirect('/')
-    pass
 
 def search (request):
     if 'user_id' in request.session:
@@ -68,6 +80,7 @@ def search (request):
         current_info = current_search.info
         context = {
             'stock': current_info,
+            'logged_user': User.objects.get(id=request.session['user_id']),
         }
         return render(request, 'searchresults.html', context)
 
