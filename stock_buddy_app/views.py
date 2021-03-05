@@ -7,11 +7,12 @@ import yfinance as yf
 
 def index(request):
     if 'user_id' in request.session:
-        this_user = request.session['user_id']
-        user_positions = Position.objects.filter(owned_by=User.objects.get(id=this_user))
-        
+        this_user = User.objects.get(id=request.session['user_id'])
+        user_positions = Position.objects.filter(owned_by=this_user)
+        for position in user_positions:
+            user_positions[position]['newattribute'] = yfinance stuff here
         context = {
-            'logged_user': User.objects.get(id=request.session['user_id']),
+            'logged_user': this_user,
             'positions': user_positions,
         }
         return render(request, "userpage.html", context)
@@ -47,24 +48,41 @@ def logout(request):
     return redirect('/')
 
 def buy_stock(request):
-    # Add code to handle the transaction of buying a stock
-    pass
+    if 'user_id' in request.session:
+        this_user = User.objects.get(id=request.session['user_id'])
+        this_stock = yf.Ticker(request.POST['stock']).info
 
+        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=request.POST['num_shares'], owned_by=User.objects.get(id=this_user.id), market_price=0, bid_price=0, ask_price=0)
+        this_user.balance -= float(request.POST['num_shares'])*float(this_stock['ask'])
+        this_user.save()
+        return redirect('/')
 def sell_stock(request):
     # Add code to handle the transaction of selling a stock
-    pass
+    if 'user_id' in request.session:
+        this_user = User.objects.get(id=request.session['user_id'])
+        this_stock = yf.Ticker(request.POST['stock']).info
 
+        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=request.POST['num_shares'], owned_by=User.objects.get(id=this_user.id), market_price=0, bid_price=0, ask_price=0)
+        this_user.balance += float(request.POST['num_shares'])*float(this_stock['ask'])
+        this_user.save()
+        return redirect('/')
+        
 def addMoney(request, id):
-    #Add code to handle adding to account  
-    pass
+    if 'user_id' in request.session:
+        this_user = User.objects.get(id=id)
+        this_user.balance += float(request.POST['amount'])
+        this_user.save()
+        return redirect('/')
 
 def search (request):
-    pass
     if 'user_id' in request.session:
         current_search = yf.Ticker(request.POST['search'])
         current_info = current_search.info
-        print(current_info['ask'])
-        return redirect("/userpage.html")
+        context = {
+            'stock': current_info,
+            'logged_user': User.objects.get(id=request.session['user_id']),
+        }
+        return render(request, 'searchresults.html', context)
 
 
 # Take the selling price and subtract the initial purchase price. The result is the gain or loss.
