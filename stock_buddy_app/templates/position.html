@@ -1,0 +1,23 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">Looking at Position#{{pos.id}} - {{pos.num_shares}} shares of {{pos.stock}} bought at
+            {{pos.bought_at}}</h3>
+        <h5>Current Market Price: {{stock.regularMarketPrice}}</h5>
+        <h5>% P/L: {{pL}}%</h5>
+        <h5>Current Volume {{stock.regularMarketVolume}}</h5>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <form method="post" action="/sellstock">
+                {% csrf_token %}
+                <input type="hidden" name="position" value="{{pos.id}}">
+                <input type="hidden" name="selling_at" value="{{stock.bid}}">
+                <button class="btn btn-outline-primary" type="submit">Sell Stock</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
