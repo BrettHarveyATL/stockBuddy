@@ -9,4 +9,5 @@ urlpatterns = [
     path('logout', views.logout),
     path('', views.index),
     path('addmoney/<int:id>', views.addMoney),
+    path('search', views.search),
 ]
