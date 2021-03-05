@@ -11,13 +11,13 @@ def index(request):
     if 'user_id' in request.session:
         this_user = User.objects.get(id=request.session['user_id'])
         user_positions = Position.objects.filter(owned_by=this_user)
-        print(serializers.serialize("json", user_positions))
-        serialized_positions = json.loads(serializers.serialize("json", user_positions))
-        for index in range(len(serialized_positions)):
-            serialized_positions[index]['something'] = "new"
-            print(json.dumps(serialized_positions[index]))
-             #serialized_positions['market_price'] = yf.Ticker[position.stock].info['regularMarketPrice']
-        print(serialized_positions)
+        # print(serializers.serialize("json", user_positions))
+        # serialized_positions = json.loads(serializers.serialize("json", user_positions))
+        # for index in range(len(serialized_positions)):
+        #     serialized_positions[index]['something'] = "new"
+        #     print(json.dumps(serialized_positions[index]))
+        #     #serialized_positions['market_price'] = yf.Ticker[position.stock].info['regularMarketPrice']
+        # print(serialized_positions)
         context = {
             'logged_user': this_user,
             'positions': user_positions,
@@ -58,8 +58,7 @@ def buy_stock(request):
     if 'user_id' in request.session:
         this_user = User.objects.get(id=request.session['user_id'])
         this_stock = yf.Ticker(request.POST['stock']).info
-
-        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=request.POST['num_shares'], owned_by=User.objects.get(id=this_user.id))
+        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=float(request.POST['bought_at']), owned_by=User.objects.get(id=this_user.id))
         this_user.balance -= float(request.POST['num_shares'])*float(this_stock['ask'])
         this_user.save()
         return redirect('/')
