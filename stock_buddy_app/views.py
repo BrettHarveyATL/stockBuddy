@@ -3,18 +3,21 @@ import bcrypt
 from django.contrib import messages
 from .models import *
 import yfinance as yf
+from django.core import serializers
+import json
 
 
 def index(request):
     if 'user_id' in request.session:
         this_user = User.objects.get(id=request.session['user_id'])
         user_positions = Position.objects.filter(owned_by=this_user)
-        for position in user_positions:
-            user_positions[position]['newattribute'] = yfinance stuff here
         context = {
             'logged_user': this_user,
             'positions': user_positions,
         }
+        msft = yf.Ticker("MSFT")
+        print(msft.financials)
+
         return render(request, "userpage.html", context)
     return render(request, "index.html")
 
@@ -51,28 +54,31 @@ def buy_stock(request):
     if 'user_id' in request.session:
         this_user = User.objects.get(id=request.session['user_id'])
         this_stock = yf.Ticker(request.POST['stock']).info
-
-        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=request.POST['num_shares'], owned_by=User.objects.get(id=this_user.id), market_price=0, bid_price=0, ask_price=0)
-        this_user.balance -= float(request.POST['num_shares'])*float(this_stock['ask'])
+        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=float(request.POST['bought_at']), owned_by=User.objects.get(id=this_user.id))
+        this_user.balance -= round(float(request.POST['num_shares'])*float(this_stock['ask']),2)
         this_user.save()
         return redirect('/')
 def sell_stock(request):
     # Add code to handle the transaction of selling a stock
     if 'user_id' in request.session:
         this_user = User.objects.get(id=request.session['user_id'])
-        this_stock = yf.Ticker(request.POST['stock']).info
-
-        Position.objects.create(stock=request.POST['stock'], num_shares=request.POST['num_shares'], bought_at=request.POST['num_shares'], owned_by=User.objects.get(id=this_user.id), market_price=0, bid_price=0, ask_price=0)
-        this_user.balance += float(request.POST['num_shares'])*float(this_stock['ask'])
+        this_position = Position.objects.get(id=request.POST['position'])
+        this_user.balance += round(float(this_position.num_shares)*float(request.POST['selling_at']),2)
         this_user.save()
+        this_position.delete()
         return redirect('/')
         
 def addMoney(request, id):
     if 'user_id' in request.session:
         this_user = User.objects.get(id=id)
-        this_user.balance += float(request.POST['amount'])
-        this_user.save()
-        return redirect('/')
+        if this_user.balance < 0:
+            this_user.balance = 0
+            this_user.save()
+            return redirect('/')
+        else:
+            this_user.balance += round(float(request.POST['amount']),2)
+            this_user.save()
+            return redirect('/')
 
 def search (request):
     if 'user_id' in request.session:
@@ -84,7 +90,14 @@ def search (request):
         }
         return render(request, 'searchresults.html', context)
 
-
-# Take the selling price and subtract the initial purchase price. The result is the gain or loss.
-# Take the gain or loss from the investment and divide it by the original amount or purchase price of the investment.
-# Finally, multiply the result by 100 to arrive at the percentage change in the investment.
+def seePosition(request, id):
+    if 'user_id' in request.session:
+        this_position = Position.objects.get(id=id)
+        position_info = yf.Ticker(this_position.stock).info
+        profLoss = ((position_info['regularMarketPrice'] - this_position.bought_at)/this_position.bought_at) * 100
+        context = {
+            'pos': this_position,
+            'stock': position_info,
+            'pL': profLoss,
+        }
+        return render(request, 'position.html', context)

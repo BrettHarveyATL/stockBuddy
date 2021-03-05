@@ -40,8 +40,5 @@ class Position(models.Model):
     num_shares = models.IntegerField()
     bought_at = models.FloatField()
     owned_by = models.ForeignKey(User, related_name="positions", on_delete=models.CASCADE)
-    market_price = models.FloatField(null=True)
-    bid_price = models.FloatField(null=True)
-    ask_price = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
