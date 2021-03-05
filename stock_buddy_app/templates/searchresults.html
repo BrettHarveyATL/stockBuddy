@@ -1,19 +1,6 @@
 {% extends "dashboard.html" %}
 {% block title %}Search Results{% endblock %}
 
-{% block topBar %}
-<div id="topBar">
-    <div class="row d-flex justify-content-between border-bottom">
-        <div class="col-10">
-            <h2>logged in as {{logged_user.first_name}}</h2>
-        </div>
-        <div class="col-2">
-            <a class="btn btn-outline-primary" href="/">Back</a>
-            <a class="btn btn-outline-primary" href="/logout">Logout</a>
-        </div>
-    </div>
-</div>
-{% endblock %}
 {% block content %}
 <div id="content">
     <div class="d-flex justify-content-center">

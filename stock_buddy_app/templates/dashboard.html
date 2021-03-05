@@ -12,17 +12,14 @@
 
 <body>
     <div class="container">
-        <div id="topBar">
-            {% block topBar %}
-            <div class="row d-flex justify-content-between border-bottom">
-                <div class="col-10">
-                    <h2>logged in as {{logged_user.first_name}}</h2>
-                </div>
-                <div class="col-2">
-                    <a class="btn btn-outline-primary" href="/logout">Logout</a>
-                </div>
+        <div class="row d-flex justify-content-between border-bottom">
+            <div class="col-9">
+                <h2>Logged in as {{logged_user.first_name}}</h2>
             </div>
-            {% endblock %}
+            <div class="col-3">
+                <a class="btn btn-outline-primary" href="/">My Page</a>
+                <a class="btn btn-outline-primary" href="/logout">Logout</a>
+            </div>
         </div>
         <div id="content">
             {% block content %}{% endblock %}
