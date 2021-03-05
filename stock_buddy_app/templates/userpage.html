@@ -4,8 +4,8 @@
 <div class="row">
     <!-- This is the blue portion of the wireframe  -->
     <div class="col-6">
-        <h3>Balance: {{user.account_owner.balance}}</h3>
-        <form method="POST" action="/addmoney/{{user.id}}" id="addMoneyForum">
+        <h3>Balance: {{logged_user.balance}}</h3>
+        <form method="POST" action="/addmoney/{{logged_user.id}}" id="addMoneyForum">
             {% csrf_token %}
             <!-- <input type="hidden" value="user_id"> -->
             <input class="form-control" type="text" name="amount" id="amount" placeholder="Enter Amount">
@@ -17,7 +17,7 @@
         <form method="post" action="/search">
             {% csrf_token %}
             <input class="form-control" type="text" name="search" id="search">
-            <button class="btn btn-outline-primary mt-3" type="submit">Search</button>
+            <button class="btn btn-outline-primary mt-3" toype="submit">Search</button>
         </form>
     </div>
 </div>
@@ -28,10 +28,11 @@
             <tr>
                 <th>Ticker</th>
                 <th>Buy Price</th>
-                <th>Current Price</th>
-                <th>Owned # of Shares</th>
+                <th>Shares Owned</th>
+                <th>Market Price</th>
+                <th>Bid</th>
+                <th>Ask</th>
                 <th>% P/L</th>
-                <th>Buy</th>
                 <th>Sell</th>
             </tr>
         </thead>
@@ -40,7 +41,12 @@
             <tr>
                 <td>{{pos.stock}}</td>
                 <td>{{pos.bought_at}}</td>
-                <td id="tickerPrice"></td>
+                <td>{{pos.num_shares}}</td>
+                <td>{{}}</td>
+                <td>placeholder</td>
+                <td>placeholder</td>
+                <td>Do some math for this</td>
+                <td>placeholder</td>
             </tr>
             {% endfor %}
         </tbody>
