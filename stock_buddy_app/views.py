@@ -92,10 +92,12 @@ def search (request):
 
 def seePosition(request, id):
     if 'user_id' in request.session:
+        this_user = User.objects.get(id=request.session['user_id'])
         this_position = Position.objects.get(id=id)
         position_info = yf.Ticker(this_position.stock).info
-        profLoss = ((position_info['regularMarketPrice'] - this_position.bought_at)/this_position.bought_at) * 100
+        profLoss = round(((position_info['regularMarketPrice'] - this_position.bought_at)/this_position.bought_at), 2 ) * 100
         context = {
+            'logged_user': this_user,
             'pos': this_position,
             'stock': position_info,
             'pL': profLoss,
