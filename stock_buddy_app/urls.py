@@ -11,4 +11,5 @@ urlpatterns = [
     path('search', views.search),
     path('sellstock', views.sell_stock),
     path('buystock', views.buy_stock),
+    path('positions/<int:id>', views.seePosition),
 ]

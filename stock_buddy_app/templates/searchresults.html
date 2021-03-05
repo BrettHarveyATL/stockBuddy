@@ -1,4 +1,5 @@
 {% extends "dashboard.html" %}
+{% block title %}Search Results{% endblock %}
 
 {% block topBar %}
 <div id="topBar">
@@ -19,7 +20,8 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">Looking at {{stock.longName}} ({{stock.symbol}})</h3>
-                <h5>City: {{stock.city}}, {{stock.state}} Phone: {{stock.phone}} Website: <a href="{{stock.website}}">{{stock.website}}</a></h5>
+                <h5>City: {{stock.city}}, {{stock.state}} Phone: {{stock.phone}} Website: <a
+                        href="{{stock.website}}">{{stock.website}}</a></h5>
                 <p>{{stock.longBusinessSummary}}</p>
                 <ul class="list-group">
                     <li class="list-item">Market Price: {{stock.regularMarketPrice}}</li>
@@ -32,12 +34,12 @@
             </div>
             <div class="card-body">
                 <form method="post" action="/buystock">
-                {% csrf_token %}
-                <input type="hidden" name="stock" value="{{stock.symbol}}">
-                <input type="hidden" name="bought_at" value="{{stock.ask}}">
-                <label for="num_shares">How many shares?:</label>
-                <input type="number" name="num_shares" id="num_shares">
-                <button type="submit">Buy Stock</button>
+                    {% csrf_token %}
+                    <input type="hidden" name="stock" value="{{stock.symbol}}">
+                    <input type="hidden" name="bought_at" value="{{stock.ask}}">
+                    <label for="num_shares">How many shares?:</label>
+                    <input type="number" name="num_shares" id="num_shares">
+                    <button class="btn btn-outline-primary" type="submit">Buy Stock</button>
                 </form>
             </div>
         </div>
