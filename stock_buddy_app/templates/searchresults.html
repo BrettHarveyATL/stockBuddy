@@ -22,29 +22,21 @@
                     <a class="btn btn-outline-primary" href="/logout">Logout</a>
                 </div>
             </div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                    <th>Ticker</th>
-                    <th>Buy Price</th>
-                    <th>Shares Owned</th>
-                    <th>Market Price</th>
-                    <th>% P/L</th>
-                    <th>Buy</th>
-                    <th>Sell</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {% for stockinfo in info%}
-                    <tr>
-                        <td>{{pos.stock}}</td>
-                    {% endfor %}
-                </tbody>
-            </table>
             {% endblock %}
         </div>
         <div id="content">
-            {% block content %}{% endblock %}
+            {% block content %}
+            <div class="d-flex justify-content-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="car-title">Looking at {{stock.}}</h3>
+                        <ul>
+                            <li>{{}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
         </div>
     </div>
 </body>

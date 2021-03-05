@@ -4,8 +4,8 @@
 <div class="row">
     <!-- This is the blue portion of the wireframe  -->
     <div class="col-6">
-        <h3>Balance: {{user.account_owner.balance}}</h3>
-        <form method="POST" action="/addmoney/{{user.id}}" id="addMoneyForum">
+        <h3>Balance: {{logged_user.balance}}</h3>
+        <form method="POST" action="/addmoney/{{logged_user.id}}" id="addMoneyForum">
             {% csrf_token %}
             <!-- <input type="hidden" value="user_id"> -->
             <input class="form-control" type="text" name="amount" id="amount" placeholder="Enter Amount">
